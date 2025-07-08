@@ -20,6 +20,8 @@ class Task(db.Model):
 @app.route('/', methods=['GET'])
 def index():
     tasks = Task.query.order_by(Task.due_date.asc().nulls_last()).all()
+    if not tasks:
+        tasks = None
     return render_template('index.html', tasks=tasks)
 
 @app.route('/add', methods=['POST'])
