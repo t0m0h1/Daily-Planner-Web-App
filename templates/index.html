@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Planner</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container my-5">
+    <h1 class="mb-4 text-center">Daily Planner</h1>
+
+    <form action="{{ url_for('add') }}" method="POST" class="mb-4">
+      <div class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <input type="text" name="title" class="form-control" placeholder="Task title" required />
+        </div>
+        <div class="col-md-4">
+          <input type="datetime-local" name="due_date" class="form-control" />
+        </div>
+        <div class="col-md-3 d-grid">
+          <button type="submit" class="btn btn-primary">Add Task</button>
+        </div>
+      </div>
+    </form>
+
+    <ul class="list-group">
+      {% for task in tasks %}
+      <li class="list-group-item d-flex justify-content-between align-items-center
+          {% if task.done %}list-group-item-success{% endif %}">
+        <div>
+          <a href="{{ url_for('toggle', task_id=task.id) }}" class="me-3">
+            {% if task.done %}
+              <span class="badge bg-success">✓</span>
+            {% else %}
+              <span class="badge bg-secondary">○</span>
+            {% endif %}
+          </a>
+          <strong>{{ task.title }}</strong>
+          {% if task.due_date %}
+            <small class="text-muted"> - due {{ task.due_date.strftime('%b %d, %Y %H:%M') }}</small>
+          {% endif %}
+        </div>
+        <a href="{{ url_for('delete', task_id=task.id) }}" class="btn btn-sm btn-danger">Delete</a>
+      </li>
+      {% else %}
+      <li class="list-group-item text-center text-muted">No tasks yet. Add some!</li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>
